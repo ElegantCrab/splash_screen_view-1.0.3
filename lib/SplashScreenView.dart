@@ -137,8 +137,8 @@ class _SplashScreenViewState extends State<SplashScreenView>
 
       }
     } else {
-      Future.wait([widget._future]).then((value) => Navigator.of(context).pushReplacement(
-              CupertinoPageRoute(builder: (BuildContext context) => widget._home)));
+      // Future.wait([widget._future]).then((value) => Navigator.of(context).pushReplacement(
+      //         CupertinoPageRoute(builder: (BuildContext context) => widget._home)));
       // if(!widget._waitUntilPop){
       //   Future.delayed(Duration(milliseconds: widget._duration)).then((value) {
       //     Navigator.of(context).pushReplacement(
@@ -199,6 +199,10 @@ class _SplashScreenViewState extends State<SplashScreenView>
 
                     if(snapshot.hasData){
                       text = widget._text;
+                      Future.delayed(Duration(milliseconds: widget._duration)).then((value) => 
+                        Navigator.of(context).pushReplacement(
+                          CupertinoPageRoute(builder: (BuildContext context) => widget._home))
+                      );
                       return Padding(
                         padding: const EdgeInsets.only(right: 10, left: 10, top: 20),
                         child: getTextWidget(text),
@@ -209,14 +213,14 @@ class _SplashScreenViewState extends State<SplashScreenView>
                       // });
                     } else if(snapshot.hasError){
                       text = widget._errorText;
+                      Future.delayed(Duration(milliseconds: widget._duration)).then((value) => 
+                        Navigator.of(context).pushReplacement(
+                          CupertinoPageRoute(builder: (BuildContext context) => widget._home))
+                      );
                       return Padding(
                         padding: const EdgeInsets.only(right: 10, left: 10, top: 20),
                         child: getTextWidget(text),
                       );
-                      // Future.delayed(Duration(milliseconds: widget._duration)).then((value) {
-                      //   Navigator.of(context).pushReplacement(
-                      //       CupertinoPageRoute(builder: (BuildContext context) => widget._homeOnError));
-                      // });
                     } else {
                       text = widget._loadingText;
                       return Padding(
