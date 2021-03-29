@@ -62,6 +62,8 @@ class SplashScreenView extends StatefulWidget {
 
   String _errorText;
 
+  String _successText;
+
   Widget _homeOnError;
 
   double _defaultTextFontSize = 20;
@@ -198,8 +200,8 @@ class _SplashScreenViewState extends State<SplashScreenView>
                     String text;
 
                     if(snapshot.hasData){
-                      text = widget._text;
-                      Future.delayed(Duration(milliseconds: widget._duration)).then((value) => 
+                      text = widget._text + "\n\n" + widget._successText;
+                      Future.delayed(Duration(milliseconds: 3000)).then((value) => 
                         Navigator.of(context).pushReplacement(
                           CupertinoPageRoute(builder: (BuildContext context) => widget._home))
                       );
@@ -212,17 +214,17 @@ class _SplashScreenViewState extends State<SplashScreenView>
                       //       CupertinoPageRoute(builder: (BuildContext context) => widget._home));
                       // });
                     } else if(snapshot.hasError){
-                      text = widget._errorText;
-                      Future.delayed(Duration(milliseconds: widget._duration)).then((value) => 
+                      text = widget._text + "\n\n" + widget._errorText;
+                      Future.delayed(Duration(milliseconds: 3000)).then((value) => 
                         Navigator.of(context).pushReplacement(
-                          CupertinoPageRoute(builder: (BuildContext context) => widget._home))
+                          CupertinoPageRoute(builder: (BuildContext context) => widget._homeOnError))
                       );
                       return Padding(
                         padding: const EdgeInsets.only(right: 10, left: 10, top: 20),
                         child: getTextWidget(text),
                       );
                     } else {
-                      text = widget._loadingText;
+                      text = widget._text + "\n\n" + widget._loadingText;
                       return Padding(
                         padding: const EdgeInsets.only(right: 10, left: 10, top: 20),
                         child: getTextWidget(text),
