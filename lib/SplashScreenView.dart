@@ -77,8 +77,8 @@ class SplashScreenView extends StatefulWidget {
       Color backgroundColor,
       text,
       Future<dynamic> future,
-      bool waitUntilPop,
-      bool redirectUponPop,
+      bool waitUntilPop = false,
+      bool redirectUponPop = true,
       String loadingText,
       String errorText,
       Widget homeOnError}) {
@@ -137,12 +137,14 @@ class _SplashScreenViewState extends State<SplashScreenView>
 
       }
     } else {
-      if(!widget._waitUntilPop){
-        Future.delayed(Duration(milliseconds: widget._duration)).then((value) {
-          Navigator.of(context).pushReplacement(
-              CupertinoPageRoute(builder: (BuildContext context) => widget._home));
-        });
-      }
+      Future.wait([widget._future]).then((value) => Navigator.of(context).pushReplacement(
+              CupertinoPageRoute(builder: (BuildContext context) => widget._home)));
+      // if(!widget._waitUntilPop){
+      //   Future.delayed(Duration(milliseconds: widget._duration)).then((value) {
+      //     Navigator.of(context).pushReplacement(
+      //         CupertinoPageRoute(builder: (BuildContext context) => widget._home));
+      //   });
+      // }
     }
 
   }
@@ -156,117 +158,86 @@ class _SplashScreenViewState extends State<SplashScreenView>
   @override
   Widget build(BuildContext context) {
 
-    if(widget._future != null){
-
-      return FutureBuilder(
-        future: widget._future,
-        builder: (BuildContext context, AsyncSnapshot snapshot) {
-          
-          String text;
-
-          if(snapshot.hasData){
-            text = widget._text;
-            Future.delayed(Duration(milliseconds: widget._duration)).then((value) {
-              Navigator.of(context).pushReplacement(
-                  CupertinoPageRoute(builder: (BuildContext context) => widget._home));
-            });
-          } else if(snapshot.hasError){
-            text = widget._errorText;
-            Future.delayed(Duration(milliseconds: widget._duration)).then((value) {
-              Navigator.of(context).pushReplacement(
-                  CupertinoPageRoute(builder: (BuildContext context) => widget._homeOnError));
-            });
-          } else {
-            text = widget._loadingText;
+    return WillPopScope(
+      onWillPop: () async {
+        if(widget._waitUntilPop){
+          if(widget._redirectUponPop){
+            Navigator.of(context).pushReplacement(
+              CupertinoPageRoute(builder: (BuildContext context) => widget._home));
           }
+        }
+        return false;
+      },
+      child: Scaffold(
+        backgroundColor: widget._backgroundColor,
+        body: Container(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          child: FadeTransition(
+            opacity: _animation,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                (widget._imageSrc != null)
+                    ? Image.asset(
+                        widget._imageSrc,
+                        height: (widget._logoSize != null)
+                            ? widget._logoSize.toDouble()
+                            : 150,
+                      )
+                    : SizedBox(
+                        height: 1,
+                      ),
+                (widget._future != null)
+                ?
+                FutureBuilder(
+                  future: widget._future,
+                  builder: (BuildContext context, AsyncSnapshot snapshot) {
 
-          return WillPopScope(
-            onWillPop: () async {
-              if(widget._waitUntilPop){
-                if(widget._redirectUponPop){
-                  Navigator.of(context).pushReplacement(
-                    CupertinoPageRoute(builder: (BuildContext context) => widget._home));
-                }
-              }
-              return false;
-            },
-            child: Scaffold(
-              backgroundColor: widget._backgroundColor,
-              body: Container(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height,
-                child: FadeTransition(
-                  opacity: _animation,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      (widget._imageSrc != null)
-                          ? Image.asset(
-                              widget._imageSrc,
-                              height: (widget._logoSize != null)
-                                  ? widget._logoSize.toDouble()
-                                  : 150,
-                            )
-                          : SizedBox(
-                              height: 1,
-                            ),
-                      Padding(
+                    String text;
+
+                    if(snapshot.hasData){
+                      text = widget._text;
+                      return Padding(
                         padding: const EdgeInsets.only(right: 10, left: 10, top: 20),
                         child: getTextWidget(text),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          );
-        },
-      );
-    }
-
-    return WillPopScope(
-            onWillPop: () async {
-              if(widget._waitUntilPop){
-                if(widget._redirectUponPop){
-                  Navigator.of(context).pushReplacement(
-                    CupertinoPageRoute(builder: (BuildContext context) => widget._home));
-                }
-              }
-              return false;
-            },
-            child: Scaffold(
-              backgroundColor: widget._backgroundColor,
-              body: Container(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height,
-                child: FadeTransition(
-                  opacity: _animation,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      (widget._imageSrc != null)
-                          ? Image.asset(
-                              widget._imageSrc,
-                              height: (widget._logoSize != null)
-                                  ? widget._logoSize.toDouble()
-                                  : 150,
-                            )
-                          : SizedBox(
-                              height: 1,
-                            ),
-                      Padding(
+                      );
+                      // Future.delayed(Duration(milliseconds: widget._duration)).then((value) {
+                      //   Navigator.of(context).pushReplacement(
+                      //       CupertinoPageRoute(builder: (BuildContext context) => widget._home));
+                      // });
+                    } else if(snapshot.hasError){
+                      text = widget._errorText;
+                      return Padding(
                         padding: const EdgeInsets.only(right: 10, left: 10, top: 20),
-                        child: getTextWidget(widget._text),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          );
+                        child: getTextWidget(text),
+                      );
+                      // Future.delayed(Duration(milliseconds: widget._duration)).then((value) {
+                      //   Navigator.of(context).pushReplacement(
+                      //       CupertinoPageRoute(builder: (BuildContext context) => widget._homeOnError));
+                      // });
+                    } else {
+                      text = widget._loadingText;
+                      return Padding(
+                        padding: const EdgeInsets.only(right: 10, left: 10, top: 20),
+                        child: getTextWidget(text),
+                      );
+                    }
 
+                  },
+                )
+                :
+                Padding(
+                  padding: const EdgeInsets.only(right: 10, left: 10, top: 20),
+                  child: getTextWidget(widget._text),
+                )
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   Widget getTextWidget(String text) {
@@ -291,14 +262,14 @@ class _SplashScreenViewState extends State<SplashScreenView>
           );
         case TextType.NormalText:
           return Text(
-            widget._text,
+            text,
             style: (widget._textStyle != null)
                 ? widget._textStyle
                 : TextStyle(fontSize: widget._defaultTextFontSize),
           );
         case TextType.TyperAnimatedText:
           return TyperAnimatedText(
-            text: widget._text,
+            text: text,
             speed: Duration(milliseconds: 100),
             textStyle: (widget._textStyle != null)
                 ? widget._textStyle
@@ -306,14 +277,14 @@ class _SplashScreenViewState extends State<SplashScreenView>
           );
         case TextType.ScaleAnimatedText:
           return ScaleAnimatedText(
-            text: widget._text,
+            text: text,
             textStyle: (widget._textStyle != null)
                 ? widget._textStyle
                 : TextStyle(fontSize: widget._defaultTextFontSize),
           );
         default:
           return Text(
-            widget._text,
+            text,
             style: (widget._textStyle != null)
                 ? widget._textStyle
                 : TextStyle(fontSize: widget._defaultTextFontSize),
