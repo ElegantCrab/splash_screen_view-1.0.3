@@ -81,6 +81,7 @@ class SplashScreenView extends StatefulWidget {
       Future<dynamic> future,
       bool waitUntilPop = false,
       bool redirectUponPop = true,
+      String successText,
       String loadingText,
       String errorText,
       Widget homeOnError}) {
@@ -104,6 +105,7 @@ class SplashScreenView extends StatefulWidget {
     _loadingText = loadingText;
     _errorText = errorText;
     _homeOnError = homeOnError;
+    _successText = successText;
   }
 
   @override
