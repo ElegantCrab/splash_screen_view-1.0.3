@@ -137,18 +137,10 @@ class _SplashScreenViewState extends State<SplashScreenView>
     }
 
     if(widget._future != null){
-      if(!widget._waitUntilPop){
-
-      }
-    } else {
-      // Future.wait([widget._future]).then((value) => Navigator.of(context).pushReplacement(
-      //         CupertinoPageRoute(builder: (BuildContext context) => widget._home)));
-      // if(!widget._waitUntilPop){
-      //   Future.delayed(Duration(milliseconds: widget._duration)).then((value) {
-      //     Navigator.of(context).pushReplacement(
-      //         CupertinoPageRoute(builder: (BuildContext context) => widget._home));
-      //   });
-      // }
+      Future.delayed(Duration(milliseconds: widget._duration)).then((value) => 
+        Navigator.of(context).pushReplacement(
+          CupertinoPageRoute(builder: (BuildContext context) => widget._home))
+      );
     }
 
   }
