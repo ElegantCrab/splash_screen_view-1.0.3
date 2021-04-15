@@ -136,7 +136,7 @@ class _SplashScreenViewState extends State<SplashScreenView>
       _animationController.forward();
     }
 
-    if(widget._future != null){
+    if(widget._future == null){
       Future.delayed(Duration(milliseconds: widget._duration)).then((value) => 
         Navigator.of(context).pushReplacement(
           CupertinoPageRoute(builder: (BuildContext context) => widget._home))
