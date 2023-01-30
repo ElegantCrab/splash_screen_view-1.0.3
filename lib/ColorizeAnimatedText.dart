@@ -5,12 +5,12 @@ class ColorizeAnimatedText extends StatefulWidget {
   final String text;
 
   /// Gives [TextStyle] to the text strings.
-  final TextStyle textStyle;
+  final TextStyle? textStyle;
 
   /// The [Duration] of the delay between the apparition of each characters
   ///
   /// By default it is set to 500 milliseconds.
-  final Duration speed;
+  final Duration? speed;
 
   /// Set the colors for the gradient animation of the text.
   ///
@@ -18,10 +18,10 @@ class ColorizeAnimatedText extends StatefulWidget {
   final List<Color> colors;
 
   const ColorizeAnimatedText({
-    Key key,
-    @required this.text,
+    Key? key,
+    required this.text,
     this.textStyle,
-    @required this.colors,
+    required this.colors,
     this.speed,
   }) : super(key: key);
 
@@ -31,21 +31,21 @@ class ColorizeAnimatedText extends StatefulWidget {
 
 class _ColorizeTextState extends State<ColorizeAnimatedText>
     with TickerProviderStateMixin {
-  AnimationController _controller;
-  Animation _colorShifter, _fadeIn, _fadeOut;
-  double _tuning;
+  late AnimationController _controller;
+  late Animation _colorShifter, _fadeIn, _fadeOut;
+  late double _tuning;
 
   @override
   void initState() {
     super.initState();
     if (mounted) setState(() {});
     _controller = AnimationController(
-      duration: widget.speed * widget.text.length,
+      duration: (widget.speed ?? Duration(seconds: 3))* widget.text.length,
       vsync: this,
     );
 
     _tuning = (300.0 * widget.colors.length) *
-        (widget.textStyle.fontSize / 24.0) *
+        ((widget.textStyle?.fontSize ?? 12) / 24.0) *
         0.75 *
         (widget.text.length / 15.0);
 
@@ -84,7 +84,7 @@ class _ColorizeTextState extends State<ColorizeAnimatedText>
     return Center(
       child: AnimatedBuilder(
         animation: _controller,
-        builder: (BuildContext context, Widget child) {
+        builder: (BuildContext context, Widget? child) {
           Shader linearGradient = LinearGradient(colors: widget.colors)
               .createShader(Rect.fromLTWH(0.0, 0.0, _colorShifter.value, 0.0));
           return Opacity(
@@ -92,7 +92,7 @@ class _ColorizeTextState extends State<ColorizeAnimatedText>
             child: Text(
               widget.text,
               style: widget.textStyle != null
-                  ? widget.textStyle.merge(
+                  ? widget.textStyle!.merge(
                       TextStyle(foreground: Paint()..shader = linearGradient))
                   : widget.textStyle,
               textAlign: TextAlign.center,

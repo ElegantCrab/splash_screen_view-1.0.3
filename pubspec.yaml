@@ -1,11 +1,11 @@
 name: splash_screen_view
 description: This flutter lib is used as Splash Screen of your app to display logo and different text style.
-version: 1.0.3
-author:  Sandip Kalola <sandipkalola1990@gmail.com>
+version: 1.1.0
+author:  Sandip Kalola <sandipkalola1990@gmail.com> modified by ElegantCrab
 homepage:  https://github.com/SandipVKalola/splash_screen
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: ">=2.15.0 <3.0.0"
 
 dependencies:
   flutter:

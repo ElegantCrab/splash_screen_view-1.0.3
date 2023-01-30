@@ -5,16 +5,16 @@ class TyperAnimatedText extends StatefulWidget {
   final String text;
 
   /// Gives [TextStyle] to the text strings.
-  final TextStyle textStyle;
+  final TextStyle? textStyle;
 
   /// The [Duration] of the delay between the apparition of each characters
   ///
   /// By default it is set to 40 milliseconds.
-  final Duration speed;
+  final Duration? speed;
 
   const TyperAnimatedText({
-    Key key,
-    @required this.text,
+    Key? key,
+    required this.text,
     this.textStyle,
     this.speed,
   }) : super(key: key);
@@ -25,8 +25,8 @@ class TyperAnimatedText extends StatefulWidget {
 
 class _TyperState extends State<TyperAnimatedText>
     with TickerProviderStateMixin {
-  AnimationController _controller;
-  Animation _typingText;
+  late AnimationController _controller;
+  late Animation _typingText;
 
   @override
   void initState() {
@@ -34,7 +34,7 @@ class _TyperState extends State<TyperAnimatedText>
     if (mounted) setState(() {});
 
     _controller = AnimationController(
-      duration: widget.speed * widget.text.length,
+      duration: (widget.speed ?? Duration(seconds: 3)) * widget.text.length,
       vsync: this,
     );
 
@@ -46,8 +46,8 @@ class _TyperState extends State<TyperAnimatedText>
 
   @override
   void dispose() {
-    _controller?.stop();
-    _controller?.dispose();
+    _controller.stop();
+    _controller.dispose();
     super.dispose();
   }
 
@@ -55,7 +55,7 @@ class _TyperState extends State<TyperAnimatedText>
   Widget build(BuildContext context) {
     return AnimatedBuilder(
       animation: _controller,
-      builder: (BuildContext context, Widget child) {
+      builder: (BuildContext context, Widget? child) {
         final int offset = widget.text.length < _typingText.value
             ? widget.text.length
             : _typingText.value;

@@ -5,14 +5,14 @@ class ScaleAnimatedText extends StatefulWidget {
   final String text;
 
   /// Gives [TextStyle] to the text strings.
-  final TextStyle textStyle;
+  final TextStyle? textStyle;
 
   /// Override the [Duration] of the animation by setting the duration parameter.
   ///
   /// This will set the total duration for the animated widget.
   /// For example, if text = ["a", "b", "c"] and if you want that each animation
   /// should take 3 seconds then you have to set [duration] to 3 seconds.
-  final Duration duration;
+  final Duration? duration;
 
   /// Set the scaling factor of the text for the animation.
   ///
@@ -20,8 +20,8 @@ class ScaleAnimatedText extends StatefulWidget {
   final double scalingFactor;
 
   const ScaleAnimatedText({
-    Key key,
-    @required this.text,
+    Key? key,
+    required this.text,
     this.textStyle,
     this.scalingFactor = 0.2,
     this.duration,
@@ -33,10 +33,9 @@ class ScaleAnimatedText extends StatefulWidget {
 
 class _ScaleTextState extends State<ScaleAnimatedText>
     with TickerProviderStateMixin {
-  AnimationController _controller;
-
-  Animation _fadeIn, _fadeOut, _scaleIn, _scaleOut;
-  Duration _duration;
+  late AnimationController _controller;
+  late Animation<double> _fadeIn, _fadeOut, _scaleIn, _scaleOut;
+  late Duration _duration;
 
   @override
   void initState() {
@@ -101,7 +100,7 @@ class _ScaleTextState extends State<ScaleAnimatedText>
         textAlign: TextAlign.center,
         style: widget.textStyle,
       ),
-      builder: (BuildContext context, Widget child) {
+      builder: (BuildContext context, Widget? child) {
         return ScaleTransition(
           scale: _scaleIn.value != 1.0 ? _scaleIn : _scaleOut,
           child: Opacity(

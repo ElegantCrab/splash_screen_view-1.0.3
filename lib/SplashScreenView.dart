@@ -16,31 +16,31 @@ enum TextType {
 // ignore: must_be_immutable
 class SplashScreenView extends StatefulWidget {
   /// The [Widget] Name of target screen which you want to display after completion of splash screen milliseconds.
-  Widget _home;
+  late Widget _home;
 
   ///  [String] Asset path of your logo image.
-  String _imageSrc = "";
+  late String _imageSrc = "";
 
   ///  [String] that would be displayed on below logo.
-  String _text;
+  late String _text;
 
   /// Select [TextType] of your text.
   ///
   /// By default it is NormalText.
-  TextType _textType;
+  late TextType _textType;
 
   /// Gives [TextStyle] to the text strings.
-  TextStyle _textStyle;
+  late TextStyle _textStyle;
 
   /// The [Duration] of the delay between the apparition of each characters
   ///
   /// By default it is set to 3000 milliseconds.
-  int _duration = 3000;
+  late int _duration = 3000;
 
   ///  [int] Size of your image logo.
   ///
   /// By default it is set to 150.
-  int _logoSize = 150;
+  late int _logoSize = 150;
 
   ///  [Color] Background Color of your splash screen.
   /// By default it is set to white.
@@ -50,41 +50,41 @@ class SplashScreenView extends StatefulWidget {
   ///
   /// The [List] should contain at least two values of [Color] in it.
   /// By default it is set to red and black.
-  List<Color> _colors;
+  late List<Color> _colors;
 
-  Future<dynamic> _future;
+  Future<dynamic>? _future;
 
-  bool _waitUntilPop;
+  late bool _waitUntilPop;
 
-  bool _redirectUponPop;
+  late bool _redirectUponPop;
 
-  String _loadingText;
+  String? _loadingText;
 
-  String _errorText;
+  String? _errorText;
 
-  String _successText;
+  String? _successText;
 
-  Widget _homeOnError;
+  Widget? _homeOnError;
 
   double _defaultTextFontSize = 20;
 
   SplashScreenView(
-      {@required String imageSrc,
-      @required Widget home,
-      @required int duration,
-      int imageSize,
+      {required String imageSrc,
+      required Widget home,
+      required int duration,
+      int? imageSize,
       textStyle,
       colors,
       textType,
-      Color backgroundColor,
+      backgroundColor,
       text,
-      Future<dynamic> future,
+      Future<dynamic>? future,
       bool waitUntilPop = false,
       bool redirectUponPop = true,
-      String successText,
-      String loadingText,
-      String errorText,
-      Widget homeOnError}) {
+      String? successText,
+      String? loadingText,
+      String? errorText,
+      Widget? homeOnError}) {
     assert(duration != null);
     assert(home != null);
     assert(imageSrc != null);
@@ -95,17 +95,17 @@ class SplashScreenView extends StatefulWidget {
     _colors = colors;
     _text = text;
     _textStyle = textStyle;
-    _logoSize = imageSize;
+    _logoSize = imageSize ?? 10;
     _backgroundColor = backgroundColor;
     _textType = textType;
 
     _future = future;
     _waitUntilPop = waitUntilPop;
     _redirectUponPop = redirectUponPop;
-    _loadingText = loadingText;
-    _errorText = errorText;
-    _homeOnError = homeOnError;
-    _successText = successText;
+    _loadingText = loadingText ?? "Loading...";
+    _errorText = errorText ?? "Error!";
+    _homeOnError = homeOnError ?? Container(child: Text("HOME ERROR"));
+    _successText = successText ?? "SUCCESS";
   }
 
   @override
@@ -114,8 +114,8 @@ class SplashScreenView extends StatefulWidget {
 
 class _SplashScreenViewState extends State<SplashScreenView>
     with SingleTickerProviderStateMixin {
-  AnimationController _animationController;
-  Animation _animation;
+  late AnimationController _animationController;
+  late Animation<double> _animation;
 
   @override
   void initState() {
@@ -194,7 +194,7 @@ class _SplashScreenViewState extends State<SplashScreenView>
                     String text;
 
                     if(snapshot.hasData){
-                      text = widget._text + "\n\n" + widget._successText;
+                      text = widget._text + "\n\n" + widget._successText!;
                       Future.delayed(Duration(milliseconds: 3000)).then((value) => 
                         Navigator.of(context).pushReplacement(
                           CupertinoPageRoute(builder: (BuildContext context) => widget._home))
@@ -208,17 +208,17 @@ class _SplashScreenViewState extends State<SplashScreenView>
                       //       CupertinoPageRoute(builder: (BuildContext context) => widget._home));
                       // });
                     } else if(snapshot.hasError){
-                      text = widget._text + "\n\n" + widget._errorText;
+                      text = widget._text + "\n\n" + widget._errorText!;
                       Future.delayed(Duration(milliseconds: 3000)).then((value) => 
                         Navigator.of(context).pushReplacement(
-                          CupertinoPageRoute(builder: (BuildContext context) => widget._homeOnError))
+                          CupertinoPageRoute(builder: (BuildContext context) => widget._homeOnError!))
                       );
                       return Padding(
                         padding: const EdgeInsets.only(right: 10, left: 10, top: 20),
                         child: getTextWidget(text),
                       );
                     } else {
-                      text = widget._text + "\n\n" + widget._loadingText;
+                      text = widget._text + "\n\n" + widget._loadingText!;
                       return Padding(
                         padding: const EdgeInsets.only(right: 10, left: 10, top: 20),
                         child: getTextWidget(text),
